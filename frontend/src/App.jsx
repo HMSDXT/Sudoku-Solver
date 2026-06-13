@@ -24,7 +24,7 @@ function App() {
   const generatePuzzle=async()=>{
     try{
       setError("");
-      const response=await axios.get(`http://localhost:5001/api/generate/${difficulty}`);
+      const response = await axios.get(`http://localhost:5001/api/generate/${difficulty.toLowerCase()}`);
       const puzzleBoard=response.data.board.map(row=>row.map(cell=>cell===0?"":cell.toString()));
       setBoard(puzzleBoard);
       setStats({nodesVisited:0,backtracks:0,timeMs:0});

@@ -3,10 +3,8 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import SudokuSolver from './sudokuSolver.js';
 
-const app=express();
-const PORT = 5001;
-const express = require("express");
 const app = express();
+const PORT = 5001;
 
 // Middleware
 app.use(cors());
