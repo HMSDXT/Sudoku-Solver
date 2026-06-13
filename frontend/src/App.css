@@ -1,0 +1,161 @@
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/iosevka-charon@5.2.6/index.css");
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid blue;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+h1{
+  color: #07448f;
+  font-size: 56px;
+  letter-spacing: 1.68px;
+  font-family: "Unbounded", sans-serif;
+  text-shadow: -1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+h2{
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+}
+body{
+  font-family: "Iosevka Charon", monospace;
+  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+}
+.container{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem;
+}
+.controls{
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+select{
+  padding: 1rem;
+  font-size: smaller;
+  font-family: "Iosevka Charon", monospace;
+  border-radius: 1rem;
+
+}
+.sudoku-grid{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 0;
+    border: 6px solid #01313b;
+    width: fit-content;
+    margin: 20px auto;
+}
+.sudoku-block{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 3px solid #000;
+}
+.sudoku-block input{
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #0d7b19;
+    font-family: "Iosevka Charon", monospace;
+}
+  
+.sudoku-block input::-webkit-outer-spin-button,.sudoku-block input::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+  margin: 0;
+}
+.sudoku-block input.animating{
+  animation: cellFill 0.4s ease-in-out;
+  background-color: #c8e6c9;
+}
+@keyframes cellFill{
+  0%{
+    background-color: #fff59d;
+    transform: scale(0.95);
+  }
+  50%{
+    background-color: #ffeb3b;
+    transform: scale(1.05);
+  }
+  100%{
+    background-color: #c8e6c9;
+    transform: scale(1);
+  }
+}
+.buttons{
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+.error{
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  border: 1px solid #d32f2f;
+}
+.stats{
+  margin-top: 1rem;
+  text-align: center;
+}
+.stats h2{
+  color: rgb(29, 3, 84);
+  text-shadow: 1px 2px 3px rgba(50, 17, 82, 0.286);
+  margin-bottom: 1rem;
+}
+.stats span{
+  font-weight: bold;
+}
+.stats p{
+  color: rgb(77, 0, 77);
+}
+button{
+  border: none;
+  border-radius: 2rem;
+  background-color: rgba(73, 73, 200, 0.618);
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+  box-shadow: 1px 1px 5px gray;
+  font-family: "Iosevka Charon", monospace;
+  font-size: 1rem;
+  font-weight: bold;
+}
+button:hover:not(:disabled){
+  scale: 1.1;
+  background-color: rgba(40, 40, 209, 0.618);
+  transition: all 200ms;
+}
+button:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.footer{
+  background-color: rgba(247, 229, 205, 0.995);
+  display: flex;
+  justify-content: center;
+  color: rgb(61, 35, 0);
+}
+.footer span{
+  font-weight: bold;
+}
