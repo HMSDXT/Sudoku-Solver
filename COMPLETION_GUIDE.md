@@ -57,7 +57,7 @@ Frontend will run on `http://localhost:5174` (or 5173 if 5174 is unavailable)
 
 ---
 
-## 📱 How to Use the Application
+## How to Use the Application
 
 1. **Enter Puzzle**: Click on grid cells and type numbers 1-9 (leave empty for unknown cells)
 2. **Choose Algorithm**: Select from dropdown:
@@ -86,7 +86,7 @@ _ _ _ | _ 8 _ | _ 7 9
 
 ---
 
-## 🛠️ Project Structure
+## Project Structure
 
 ```
 DSA Project/
@@ -111,7 +111,7 @@ DSA Project/
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Solve Sudoku Puzzle
 **POST** `http://localhost:5001/api/solve`
@@ -148,7 +148,7 @@ Returns: `{"status": "Backend is running"}`
 
 ---
 
-## ⚡ Algorithm Comparison
+## Algorithm Comparison
 
 ### Basic Backtracking
 - **Speed**: Slower (more nodes to explore)
@@ -166,7 +166,7 @@ Returns: `{"status": "Backend is running"}`
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Frontend shows "Error connecting to backend"
 **Solution**: Make sure backend is running

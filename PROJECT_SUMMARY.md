@@ -138,7 +138,7 @@ Frontend:
 
 ---
 
-## 🔧 How Everything Works
+## How Everything Works
 
 ### 1. User enters Sudoku puzzle in frontend
 → Grid accepts numbers 1-9
