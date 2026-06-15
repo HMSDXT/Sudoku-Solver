@@ -49,6 +49,7 @@ function App(){
     }
     return candidates;
   };
+
   const handleCellClick=(row,col)=>{setSelectedCell({row,col}); setPossibleInputs(getPossibleInputs(row,col));};
 
   const handleChange=(row,col,value)=>{
@@ -73,11 +74,9 @@ function App(){
       setStats({nodesVisited: 0,backtracks: 0,timeMs: 0});
       setAnalysis(null);
       setComparison(null);
-    }catch (err){
+    }catch(err){
       console.error(err);
-      setError(
-        'Failed to generate puzzle.'
-      );
+      setError('Failed to generate puzzle.');
     }
   };
 
@@ -96,7 +95,7 @@ function App(){
       const positions=[];
       for(let i=0;i<9;i++){
         for(let j=0;j<9;j++){
-          if(originalBoard[i][j]===''){positions.push({row: i,col: j});}
+          if(originalBoard[i][j]===''){positions.push({row:i,col:j});}
         }
       }
       setAnimatingCells(new Set());
@@ -183,13 +182,13 @@ function App(){
             })}
           </div>
           <div className="buttons">
-                <button onClick={generatePuzzle}>Generate</button>
-                <button onClick={solveSudoku} disabled={solving}>
-                  {solving ? 'Solving...' : 'Solve'}
-                </button>
-                <button onClick={compareAlgorithms}>Compare</button>
-                <button onClick={resetBoard}>Reset</button>
-              </div>
+            <button onClick={generatePuzzle}>Generate</button>
+            <button onClick={solveSudoku} disabled={solving}>
+                  {solving ? 'Solving...':'Solve'}
+            </button>
+            <button onClick={compareAlgorithms}>Compare</button>
+            <button onClick={resetBoard}>Reset</button>
+          </div>
         </div>
         <div className="right-panel">
             {selectedCell && (<div className="stats">
@@ -198,7 +197,8 @@ function App(){
               <div className="candidates">
                 {possibleInputs.map(num=>(
                   <button key={num} className="candidate-btn"
-                    onClick={()=>handleChange(selectedCell.row,selectedCell.col,num.toString())}>                  {num}
+                    onClick={()=>handleChange(selectedCell.row,selectedCell.col,num.toString())}>
+                      {num}
                   </button>
                   ))}
                 </div>
@@ -247,6 +247,7 @@ function App(){
     </div>
   );
 }
+
 createRoot(
   document.getElementById('root')
 ).render(
