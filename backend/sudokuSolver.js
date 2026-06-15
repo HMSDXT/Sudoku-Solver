@@ -258,32 +258,6 @@ class SudokuSolver {
     };
   }
 
-  analyzeDifficulty() {
-
-    let emptyCells = 0;
-
-    for (let row = 0; row < 9; row++) {
-
-      for (let col = 0; col < 9; col++) {
-
-        if (this.board[row][col] === 0)
-          emptyCells++;
-      }
-    }
-
-    let difficulty = 'Easy';
-
-    if (emptyCells >= 50)
-      difficulty = 'Hard';
-    else if (emptyCells >= 40)
-      difficulty = 'Medium';
-
-    return {
-      emptyCells,
-      difficulty
-    };
-  }
-
   compareAlgorithms() {
 
     const originalBoard =

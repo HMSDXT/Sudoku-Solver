@@ -15,7 +15,6 @@ function App(){
   const [solving,setSolving]=useState(false);
   const [error,setError]=useState('');
   const [stats,setStats]=useState({nodesVisited:0,backtracks:0,timeMs:0});
-  const [analysis,setAnalysis]=useState(null);
   const [comparison,setComparison]=useState(null);
   const [animatingCells,setAnimatingCells]=useState(new Set());
   const [selectedCell,setSelectedCell]=useState(null);
@@ -130,16 +129,6 @@ function App(){
     }
   };
 
-  const analyzePuzzle=async ()=>{
-    try{
-      const response=await axios.post(`${API_URL}/api/analyze`,{board});
-      setAnalysis(response.data.analysis);
-    }catch (err){
-      console.error(err);
-      setError('Failed to analyze puzzle.');
-    }
-  };
-
   const compareAlgorithms=async ()=>{
     try{
       const response=await axios.post(`${API_URL}/api/compare`,{board});
@@ -153,7 +142,6 @@ function App(){
   const resetBoard=()=>{
     setBoard(emptyBoard);
     setStats({nodesVisited:0,backtracks:0,timeMs:0});
-    setAnalysis(null);
     setComparison(null);
     setError('');
   };
@@ -199,7 +187,6 @@ function App(){
                 <button onClick={solveSudoku} disabled={solving}>
                   {solving ? 'Solving...' : 'Solve'}
                 </button>
-                <button onClick={analyzePuzzle}>Analyze</button>
                 <button onClick={compareAlgorithms}>Compare</button>
                 <button onClick={resetBoard}>Reset</button>
               </div>
@@ -224,13 +211,6 @@ function App(){
                 <p>Backtracks: <span>{stats.backtracks}</span></p>
                 <p>Time: <span>{stats.timeMs}</span> ms</p>
               </div>
-              {analysis && (
-                <div className="stats">
-                  <h2>Difficulty Analysis</h2>
-                  <p>Empty Cells:<span>{analysis.emptyCells}</span></p>
-                  <p>Difficulty:<span>{analysis.difficulty}</span></p>
-                </div>
-              )}
               {comparison && (
                 <div className="stats">
                   <h2>Algorithm Comparison</h2>

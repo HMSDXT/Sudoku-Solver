@@ -149,32 +149,6 @@ app.post('/api/compare', (req, res) => {
   }
 });
 
-app.post('/api/analyze', (req, res) => {
-  try {
-
-    const { board } = req.body;
-
-    const solver = new SudokuSolver(board);
-
-    const analysis = solver.analyzeDifficulty();
-
-    res.json({
-      success: true,
-      analysis
-    });
-
-  } catch (error) {
-
-    console.error('Analysis Error:', error);
-
-    res.status(500).json({
-      success: false,
-      error: 'Failed to analyze puzzle',
-      message: error.message
-    });
-  }
-});
-
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'running',
