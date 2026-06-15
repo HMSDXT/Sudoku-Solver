@@ -76,8 +76,9 @@ select{
     font-weight: bold;
     color: #0d7b19;
     font-family: "Iosevka Charon", monospace;
+    border: 1px solid #c7c7c7;
+    outline: none;
 }
-  
 .sudoku-block input::-webkit-outer-spin-button,.sudoku-block input::-webkit-inner-spin-button{
   -webkit-appearance: none;
   margin: 0;
@@ -86,6 +87,11 @@ select{
   animation: cellFill 0.4s ease-in-out;
   background-color: #c8e6c9;
 }
+.sudoku-block input:focus{
+  background-color: #e3f2fd;
+  border: 2px solid #1976d2;
+}
+
 @keyframes cellFill{
   0%{
     background-color: #fff59d;
@@ -117,6 +123,13 @@ select{
 .stats{
   margin-top: 1rem;
   text-align: center;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(8px);
+  padding: 1.2rem 2rem;
+  border-radius: 1rem;
+  margin-top: 1.5rem;
+  min-width: 320px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 .stats h2{
   color: rgb(29, 3, 84);
@@ -125,9 +138,13 @@ select{
 }
 .stats span{
   font-weight: bold;
+  margin-left: 0.4rem;
+  color: #003c7a;
 }
 .stats p{
   color: rgb(77, 0, 77);
+  margin: 0.5rem 0;
+  font-size: 1rem;
 }
 button{
   border: none;
@@ -157,4 +174,48 @@ button:disabled{
 }
 .footer span{
   font-weight: bold;
+}
+table{
+  border-collapse: collapse;
+  margin-top: 1rem;
+  width: 100%;
+  min-width: 350px;
+}
+table th,table td{
+  border: 1px solid #8ca8d6;
+  padding: 0.75rem;
+  text-align: center;
+}
+table th{
+  background-color: #dceeff;
+  color: #003c7a;
+}
+table td{
+  background-color: rgba(255,255,255,0.7);
+}
+
+@media(max-width:768px){
+  h1{
+    font-size: 2rem;
+  }
+  .controls{
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .buttons{
+    flex-wrap: wrap;
+  }
+  .sudoku-block input{
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
+  }
+  .stats{
+    width: 95%;
+    min-width: auto;
+  }
+  table{
+    min-width: auto;
+    font-size: 0.85rem;
+  }
 }
