@@ -7,6 +7,7 @@ import './App.css';
 const API_URL=import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 function App(){
+
   const emptyBoard=Array(9).fill().map(()=>Array(9).fill(''));
   const [board,setBoard]=useState(emptyBoard);
   const [algorithm,setAlgorithm]=useState('basic');
@@ -17,13 +18,53 @@ function App(){
   const [analysis,setAnalysis]=useState(null);
   const [comparison,setComparison]=useState(null);
   const [animatingCells,setAnimatingCells]=useState(new Set());
+  const [selectedCell,setSelectedCell]=useState(null);
+  const [possibleInputs,setPossibleInputs]=useState([]);
+  
+  const getPossibleInputs=(row,col)=>{
+    const used=new Set();
+    for(let c=0;c<9;c++){
+      if(c!==col && board[row][c]!==''){
+        used.add(Number(board[row][c]));
+      }
+    }
+    for(let r=0;r<9;r++){
+      if(r!==row && board[r][col]!==''){
+        used.add(Number(board[r][col]));
+      }
+    }
+    const startRow=Math.floor(row/3)*3;
+    const startCol=Math.floor(col/3)*3;
+    for(let r=startRow;r<startRow+3;r++){
+      for(let c=startCol;c<startCol+3;c++){
+        if(!(r===row && c===col) && board[r][c]!==''){
+          used.add(Number(board[r][c]));
+        }
+      }
+    }
+    const candidates=[];
+    for (let num=1;num<=9;num++){
+      if(!used.has(num)){
+        candidates.push(num);
+      }
+    }
+    return candidates;
+  };
+  const handleCellClick=(row,col)=>{setSelectedCell({row,col}); setPossibleInputs(getPossibleInputs(row,col));};
+
   const handleChange=(row,col,value)=>{
     if(value!=='' && !/^[1-9]$/.test(value)) return;
     const newBoard=board.map(r=>[...r]);
     newBoard[row][col]=value;
     setBoard(newBoard);
     setError('');
+    if(selectedCell && selectedCell.row===row && selectedCell.col===col){
+      setTimeout(()=>{
+        setPossibleInputs(getPossibleInputs(row,col));
+      },0);
+    }
   };
+
   const generatePuzzle=async ()=>{
     try{
       setError('');
@@ -40,6 +81,7 @@ function App(){
       );
     }
   };
+
   const solveSudoku=async ()=>{
     try{
       setError('');
@@ -87,6 +129,7 @@ function App(){
       setSolving(false);
     }
   };
+
   const analyzePuzzle=async ()=>{
     try{
       const response=await axios.post(`${API_URL}/api/analyze`,{board});
@@ -96,6 +139,7 @@ function App(){
       setError('Failed to analyze puzzle.');
     }
   };
+
   const compareAlgorithms=async ()=>{
     try{
       const response=await axios.post(`${API_URL}/api/compare`,{board});
@@ -105,6 +149,7 @@ function App(){
       setError('Failed to compare algorithms.');
     }
   };
+
   const resetBoard=()=>{
     setBoard(emptyBoard);
     setStats({nodesVisited:0,backtracks:0,timeMs:0});
@@ -125,80 +170,100 @@ function App(){
           <option>Hard</option>
         </select>
       </div>
-      <div className="sudoku-grid">
-        {Array(9).fill().map((_, blockIndex)=>{
-            const blockRow=Math.floor(blockIndex/3)*3;
-            const blockCol=(blockIndex%3)*3;
-            return(
-              <div key={blockIndex} className="sudoku-block">
-                {Array(9).fill().map((_, cellIndex)=>{
+      <div className="main-layout">
+        <div className="left-panel">
+          <div className="sudoku-grid">
+            {Array(9).fill().map((_, blockIndex)=>{
+              const blockRow=Math.floor(blockIndex/3)*3;
+              const blockCol=(blockIndex%3)*3;
+              return(
+                <div key={blockIndex} className="sudoku-block">
+                  {Array(9).fill().map((_, cellIndex)=>{
                     const row=blockRow+Math.floor(cellIndex/3);
                     const col=blockCol+(cellIndex%3);
                     const animated=animatingCells.has(`${row}-${col}`);
                     return(
                       <input key={`${row}-${col}`} type="text" maxLength="1" value={board[row][col]}
                         onChange={e=>handleChange(row,col,e.target.value)}
-                        className={animated ? 'animating' : ''}/>
+                        onClick={()=>handleCellClick(row,col)}
+                        className={`${animated?'animating':''}${
+                          selectedCell && selectedCell.row===row && selectedCell.col===col ? 'selected-cell':''}`}/>
                     );
                   })}
+                </div>
+              );
+            })}
+          </div>
+          <div className="buttons">
+                <button onClick={generatePuzzle}>Generate</button>
+                <button onClick={solveSudoku} disabled={solving}>
+                  {solving ? 'Solving...' : 'Solve'}
+                </button>
+                <button onClick={analyzePuzzle}>Analyze</button>
+                <button onClick={compareAlgorithms}>Compare</button>
+                <button onClick={resetBoard}>Reset</button>
               </div>
-            );
-          })}
-      </div>
-      <div className="buttons">
-        <button onClick={generatePuzzle}>Generate</button>
-        <button onClick={solveSudoku} disabled={solving}>
-          {solving ? 'Solving...' : 'Solve'}
-        </button>
-        <button onClick={analyzePuzzle}>Analyze</button>
-        <button onClick={compareAlgorithms}>Compare</button>
-        <button onClick={resetBoard}>Reset</button>
-      </div>
-      {error && (<div className="error">{error}</div>)}
-      <div className="stats">
-        <h2>Performance Metrics</h2>
-        <p>Nodes Visited: <span>{stats.nodesVisited}</span></p>
-        <p>Backtracks: <span>{stats.backtracks}</span></p>
-        <p>Time: <span>{stats.timeMs}</span> ms</p>
-      </div>
-      {analysis && (
-        <div className="stats">
-          <h2>Difficulty Analysis</h2>
-          <p>Empty Cells:<span>{analysis.emptyCells}</span></p>
-          <p>Difficulty:<span>{analysis.difficulty}</span></p>
         </div>
-      )}
-      {comparison && (
-        <div className="stats">
-          <h2>Algorithm Comparison</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Metric</th>
-                <th>Basic</th>
-                <th>MRV</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Nodes</td>
-                <td>{comparison.basic.nodesVisited}</td>
-                <td>{comparison.mrv.nodesVisited}</td>
-              </tr>
-              <tr>
-                <td>Backtracks</td>
-                <td>{comparison.basic.backtracks}</td>
-                <td>{comparison.mrv.backtracks}</td>
-              </tr>
-              <tr>
-                <td>Time(ms)</td>
-                <td>{comparison.basic.timeMs}</td>
-                <td>{comparison.mrv.timeMs}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="right-panel">
+            {selectedCell && (<div className="stats">
+              <h2>Possible Inputs</h2>
+              <p>Selected Cell:<span>({selectedCell.row+1},{selectedCell.col+1})</span></p>
+              <div className="candidates">
+                {possibleInputs.map(num=>(
+                  <button key={num} className="candidate-btn"
+                    onClick={()=>handleChange(selectedCell.row,selectedCell.col,num.toString())}>                  {num}
+                  </button>
+                  ))}
+                </div>
+              </div>
+              )}
+              {error && (<div className="error">{error}</div>)}
+              <div className="stats">
+                <h2>Performance Metrics</h2>
+                <p>Nodes Visited: <span>{stats.nodesVisited}</span></p>
+                <p>Backtracks: <span>{stats.backtracks}</span></p>
+                <p>Time: <span>{stats.timeMs}</span> ms</p>
+              </div>
+              {analysis && (
+                <div className="stats">
+                  <h2>Difficulty Analysis</h2>
+                  <p>Empty Cells:<span>{analysis.emptyCells}</span></p>
+                  <p>Difficulty:<span>{analysis.difficulty}</span></p>
+                </div>
+              )}
+              {comparison && (
+                <div className="stats">
+                  <h2>Algorithm Comparison</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Metric</th>
+                        <th>Basic</th>
+                        <th>MRV</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Nodes</td>
+                        <td>{comparison.basic.nodesVisited}</td>
+                        <td>{comparison.mrv.nodesVisited}</td>
+                      </tr>
+                      <tr>
+                        <td>Backtracks</td>
+                        <td>{comparison.basic.backtracks}</td>
+                        <td>{comparison.mrv.backtracks}</td>
+                      </tr>
+                      <tr>
+                        <td>Time(ms)</td>
+                        <td>{comparison.basic.timeMs}</td>
+                        <td>{comparison.mrv.timeMs}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
